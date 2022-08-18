@@ -17,14 +17,12 @@ class Article(models.Model):
         return self.title
 
 
-class Topic(models.Model):
-    name = models.CharField(max_length=50, unique=True)
+class Tags(models.Model):
+    topic = models.CharField(max_length=50)
+    tag = models.ManyToManyField(Article, through='Scopes', related_name='scopes')
+    is_main = models.BooleanField(unique=True)
 
 
 class Scopes(models.Model):
-    article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name='Scopes')
-    topic = models.ForeignKey(Topic, on_delete=models.CASCADE, related_name='topic')
-    is_main = models.BooleanField(default=False, verbose_name='Основной')
-
-    class Meta:
-        verbose_name = 'Тэг'
+    article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name='scope')
+    scope = models.ForeignKey(Tags, on_delete=models.CASCADE, related_name='scope')
