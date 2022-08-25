@@ -20,9 +20,9 @@ class Article(models.Model):
 class Tags(models.Model):
     topic = models.CharField(max_length=50)
     tag = models.ManyToManyField(Article, through='Scopes', related_name='scopes')
-    is_main = models.BooleanField(unique=True)
 
 
 class Scopes(models.Model):
     article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name='scope')
     scope = models.ForeignKey(Tags, on_delete=models.CASCADE, related_name='scope')
+    is_main = models.BooleanField(default=False)

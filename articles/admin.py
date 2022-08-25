@@ -4,17 +4,21 @@ from django.core.exceptions import ValidationError
 from django.forms import BaseInlineFormSet
 
 
-# class TagsInLineFormSet(BaseInlineFormSet):
-#     def clean(self):
-#         for form in self.forms:
-#             form.cleaned_data.get()
-#             raise ValidationError('хрень')
-#         return super().clean()
+class TagsInLineFormSet(BaseInlineFormSet):
+    def clean(self):
+        x = 0
+        for form in self.forms:
+            for f, r in form.cleaned_data.items():
+                if f == 'is_main' and r:
+                    x += 1
+            if x >= 2:
+                raise ValidationError('main tag must be only one')
+        return super().clean()
 
 
 class TagsInline(admin.TabularInline):
     model = Tags.tag.through
-    # formset = TagsInLineFormSet
+    formset = TagsInLineFormSet
 
 
 # class UniqInline(admin.TabularInline):
